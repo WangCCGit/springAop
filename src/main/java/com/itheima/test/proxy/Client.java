@@ -1,4 +1,4 @@
-package com.itheima.proxy;
+package com.itheima.test.proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

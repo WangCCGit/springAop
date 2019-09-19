@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--配置代理的service-->
+    <!--配置代理的service
     <bean id="proxyAccountService" factory-bean="beanFactory" factory-method="getAccountService"></bean>
 
-    <!--配置beanfactory-->
+    &lt;!&ndash;配置beanfactory&ndash;&gt;
     <bean id="beanFactory" class="com.itheima.factory.BeanFactory">
-        <!-- 注入service -->
+        &lt;!&ndash; 注入service &ndash;&gt;
         <property name="accountService" ref="accountService"></property>
-        <!-- 注入事务管理器 -->
+        &lt;!&ndash; 注入事务管理器 &ndash;&gt;
         <property name="txManager" ref="txManager"></property>
     </bean>
 
-     <!-- 配置Service -->
+     &lt;!&ndash; 配置Service &ndash;&gt;
     <bean id="accountService" class="com.itheima.service.impl.AccountServiceImpl">
-        <!-- 注入dao -->
+        &lt;!&ndash; 注入dao &ndash;&gt;
         <property name="accountDao" ref="accountDao"></property>
     </bean>
 
-    <!--配置Dao对象-->
+    &lt;!&ndash;配置Dao对象&ndash;&gt;
     <bean id="accountDao" class="com.itheima.dao.impl.AccountDaoImpl">
-        <!-- 注入QueryRunner -->
+        &lt;!&ndash; 注入QueryRunner &ndash;&gt;
         <property name="runner" ref="runner"></property>
-        <!-- 注入ConnectionUtils -->
+        &lt;!&ndash; 注入ConnectionUtils &ndash;&gt;
         <property name="connectionUtils" ref="connectionUtils"></property>
     </bean>
+-->
+
+    <!--配置spring创建容器时要扫描的包-->
+    <context:component-scan base-package="com.itheima"></context:component-scan>
 
     <!--配置QueryRunner-->
     <bean id="runner" class="org.apache.commons.dbutils.QueryRunner" scope="prototype"></bean>
@@ -42,14 +52,30 @@
     </bean>
 
     <!-- 配置Connection的工具类 ConnectionUtils -->
-    <bean id="connectionUtils" class="com.itheima.utils.ConnectionUtils">
-        <!-- 注入数据源-->
+   <!-- <bean id="connectionUtils" class="com.itheima.utils.ConnectionUtils">
+        &lt;!&ndash; 注入数据源&ndash;&gt;
         <property name="dataSource" ref="dataSource"></property>
     </bean>
 
-    <!-- 配置事务管理器-->
+    &lt;!&ndash; 配置事务管理器&ndash;&gt;
     <bean id="txManager" class="com.itheima.utils.TransactionManager">
-        <!-- 注入ConnectionUtils -->
+        &lt;!&ndash; 注入ConnectionUtils &ndash;&gt;
         <property name="connectionUtils" ref="connectionUtils"></property>
-    </bean>
+    </bean>-->
+
+    <!-- aop的事物配置-->
+    <!--<aop:config>
+        <aop:pointcut id="transPoint" expression="execution(* com.itheima.service.impl.*.*(..))"></aop:pointcut>
+        <aop:aspect ref="txManager">
+            <aop:before method="beginTransaction" pointcut-ref="transPoint"></aop:before>
+            <aop:after-returning method="commit" pointcut-ref="transPoint"></aop:after-returning>
+            <aop:after-throwing method="rollback" pointcut-ref="transPoint"></aop:after-throwing>
+            <aop:after method="release" pointcut-ref="transPoint"></aop:after>
+        </aop:aspect>
+
+    </aop:config>-->
+
+    <!--开启spring对注解AOP的支持-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
 </beans>

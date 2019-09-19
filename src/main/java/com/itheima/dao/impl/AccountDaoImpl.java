@@ -6,15 +6,21 @@ import com.itheima.utils.ConnectionUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * 账户的持久层实现类
  */
+@Repository
 public class AccountDaoImpl implements IAccountDao {
 
+    @Autowired
     private QueryRunner runner;
+
+    @Autowired
     private ConnectionUtils connectionUtils;
 
     public void setRunner(QueryRunner runner) {

@@ -1,20 +1,25 @@
 package com.itheima.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
  * 连接的工具类，它用于从数据源中获取一个连接，并且实现和线程的绑定
  */
+@Component
 public class ConnectionUtils {
 
     private ThreadLocal<Connection> tl = new ThreadLocal<Connection>();
 
+    @Autowired
     private DataSource dataSource;
 
-    public void setDataSource(DataSource dataSource) {
+    /*public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
-    }
+    }*/
 
     /**
      * 获取当前线程上的连接

@@ -2,6 +2,8 @@ package com.itheima.factory;
 
 import com.itheima.service.IAccountService;
 import com.itheima.utils.TransactionManager;
+import com.itheima.utils.TransactionManagerAnnotation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -12,13 +14,17 @@ import java.lang.reflect.Proxy;
  */
 public class BeanFactory {
 
+    @Autowired
     private IAccountService accountService;
 
-    private TransactionManager txManager;
 
-    public void setTxManager(TransactionManager txManager) {
+    //private TransactionManager txManager;
+    @Autowired
+    private TransactionManagerAnnotation transaction;
+
+    /*public void setTxManager(TransactionManager txManager) {
         this.txManager = txManager;
-    }
+    }*/
 
 
     public final void setAccountService(IAccountService accountService) {
@@ -52,20 +58,20 @@ public class BeanFactory {
                         Object rtValue = null;
                         try {
                             //1.开启事务
-                            txManager.beginTransaction();
+                            transaction.beginTransaction();
                             //2.执行操作
                             rtValue = method.invoke(accountService, args);
                             //3.提交事务
-                            txManager.commit();
+                            transaction.commit();
                             //4.返回结果
                             return rtValue;
                         } catch (Exception e) {
                             //5.回滚操作
-                            txManager.rollback();
+                            transaction.rollback();
                             throw new RuntimeException(e);
                         } finally {
                             //6.释放连接
-                            txManager.release();
+                            transaction.release();
                         }
                     }
                 });
